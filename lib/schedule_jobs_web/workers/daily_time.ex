@@ -5,28 +5,21 @@ defmodule ScheduleJobsWeb.Workers.DailyTime do
   # alias ScheduleJobs.Customer.CustomerSchema
   alias ScheduleJobsWeb.PrintTime
 
+
+
+  @impl Oban.Worker
+  def perform(%Oban.Job{args: %{"id" => id, every: minutes} = args}) do
+    model = ScheduleJobs.Customer.get_customer_schema!(id)
+    IO.puts(model)
+    new(args, schedule_in: {minutes, :minutes})
+    |> Oban.insert()
+
+    :ok
+  end
+
   @impl Oban.Worker
   def perform(_job) do
     IO.inspect(PrintTime.hour())
     :ok
   end
-
-  @impl Oban.Worker
-  def perform(%Oban.Job{args: %{"id" => id} = args}) do
-    model = MyApp.Repo.get(MyApp.Business.Man, id)
-
-    case args do
-      %{"in_the" => "business"} ->
-        IO.inspect(model)
-
-      %{"vote_for" => vote} ->
-        IO.inspect([vote, model])
-
-      _ ->
-        IO.inspect(model)
-    end
-
-    :ok
-  end
-
 end

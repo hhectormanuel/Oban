@@ -9,10 +9,9 @@ defmodule ScheduleJobs.Customer do
   alias ScheduleJobs.Customer.CustomerSchema
 
 
-  def list_user_from_last_day do
-    from(
-      u in CustomerSchema,
-      where: u.age > 15
+  def list_customer_by_id(id) do
+    from(c in CustomerSchema,
+      where: c.id == ^id
     )
     |> Repo.all()
   end
